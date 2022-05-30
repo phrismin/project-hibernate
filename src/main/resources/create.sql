@@ -7,7 +7,7 @@ CREATE TABLE users
     birth_date DATE,
     age        INT,
     role       VARCHAR(32) ,
-    company_id INT REFERENCES company(id)
+    company_id INT REFERENCES company(id) ON DELETE CASCADE
 );
 
 CREATE TABLE company
