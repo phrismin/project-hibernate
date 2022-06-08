@@ -6,9 +6,17 @@ CREATE TABLE users
     lastname   VARCHAR(128),
     birth_date DATE,
     age        INT,
-    role       VARCHAR(32) ,
-    company_id INT REFERENCES company(id) ON DELETE CASCADE
+    role       VARCHAR(32),
+    company_id INT REFERENCES company (id) ON DELETE CASCADE
 );
+
+CREATE TABLE profile
+(
+    id BIGSERIAL PRIMARY KEY ,
+    user_id BIGSERIAL NOT NULL UNIQUE
+);
+
+DROP TABLE profile;
 
 CREATE TABLE company
 (
