@@ -1,15 +1,37 @@
 package com.example.hibernateproject;
 
-import com.example.hibernateproject.entity.Company;
-import com.example.hibernateproject.entity.Profile;
-import com.example.hibernateproject.entity.User;
+import com.example.hibernateproject.entity.*;
 import com.example.hibernateproject.util.HibernateUtil;
 import lombok.Cleanup;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.Set;
 
 class HibernateRunnerTest {
+
+    @Test
+    void checkManyToMany() {
+        try (var sessionFactory = HibernateUtil.buildSessionFactory();
+             var session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            User user = session.get(User.class, 7L);
+            Chat chat = session.get(Chat.class, 1L);
+
+            UserChat userChat = UserChat.builder()
+                    .createdAt(Instant.now())
+                    .createdBy(user.getUsername())
+                    .build();
+            userChat.setUser(user);
+            userChat.setChat(chat);
+
+            session.save(userChat);
+
+            session.getTransaction().commit();
+        }
+    }
+
 
     @Test
     void checkOneToOne() {
@@ -18,18 +40,18 @@ class HibernateRunnerTest {
 
             session.beginTransaction();
 
-            User user = session.get(User.class, 1L);
-            System.out.println(user);
+            User user = User.builder()
+                    .username("Test5@gmail.com")
+                    .build();
 
-//            User user = User.builder()
-//                    .username("Test@gmail.com")
-//                    .build();
-//
-//            Profile profile = Profile.builder()
-//                    .language("by")
-//                    .street("Novaya")
-//                    .build();
-//
+            Profile profile = Profile.builder()
+                    .language("by")
+                    .street("Novaya")
+                    .build();
+
+            profile.setUser(user);
+
+            session.save(user);
 //            session.save(user);
 //            profile.setUser(user);
 //            session.save(profile);

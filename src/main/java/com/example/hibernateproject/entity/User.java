@@ -3,12 +3,14 @@ package com.example.hibernateproject.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "username")
-@ToString(exclude = {"company", "profile"})
+@ToString(exclude = {"company", "profile", "userChats"})
 @Builder
 @Entity
 @Table(name = "users", schema = "public")
@@ -33,7 +35,16 @@ public class User {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(
+        mappedBy = "user",
+        cascade = CascadeType.ALL,
+        fetch = FetchType.LAZY,
+        optional = false
+       )
     private Profile profile;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user")
+    private Set<UserChat> userChats = new HashSet<>();
 
 }
